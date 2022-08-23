@@ -505,8 +505,16 @@ button {
   font-weight: 600;
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+  display: flex;
 }
 
+#price {
+  padding: 0.25rem 0.5rem;
+  margin-left: 1rem;
+  border-radius: 1rem;
+  background-color: #000000;
+  color: #ffffff;
+}
 .listingLocation {
   margin-top: 0;
   font-weight: 600;
@@ -514,7 +522,7 @@ button {
 
 .discountPrice {
   padding: 0.25rem 0.5rem;
-  background-color: #000000;
+  background-color: red;
   color: #ffffff;
   border-radius: 1rem;
   font-size: 0.8rem;
@@ -818,4 +826,10 @@ button {
   margin-left: 1rem;
   font-size: 0.8rem;
   opacity: 0.75;
+}
+
+#map {
+  margin-top: 2rem;
+  width: 100%;
+  height: 100vh;
 }

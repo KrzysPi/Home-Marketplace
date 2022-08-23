@@ -9,14 +9,21 @@ import Offers from "./pages/Offers";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Category from "./pages/Category";
+import CreateListing from "./pages/CreateListing";
+import Listing from "./pages/Listing";
+import { LocationProvider } from "./context/LocationContext";
 
 function App() {
   return (
-    <>
+    <LocationProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/offers" element={<Offers />} />
+          <Route path="/category/:categoryName" element={<Category />} />
+          {/* :categoryName dlatego, że będziemy to zastępować sale lub rent */}
+
           {/* <Route path="/profile" element={<Profile />} /> */}
           {/* zamieniamy na poniżesze. teraz powyższe jest jako Outlet (PrivateRoute.jsx). dziekitemu bedzie to wyswietlna tylko jak loggedIn=true */}
           <Route path="/profile" element={<PrivateRoute />}>
@@ -25,11 +32,16 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/create-listing" element={<CreateListing />} />
+          <Route
+            path="/category/:categoryName/:listingId"
+            element={<Listing />}
+          />
         </Routes>
         <Navbar />
         <ToastContainer />
       </Router>
-    </>
+    </LocationProvider>
   );
 }
 
