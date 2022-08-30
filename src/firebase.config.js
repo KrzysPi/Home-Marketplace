@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+// dane do projektu
 const firebaseConfig = {
   apiKey: "AIzaSyA4JR9Y_ami3s_NWzoKl0dRNCBxqikrEQI",
   authDomain: "house-marketplace-app-919c3.firebaseapp.com",

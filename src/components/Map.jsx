@@ -1,10 +1,10 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
-import { useMapEvents, useMap, markers } from "react-leaflet/hooks";
+import { useMapEvents} from "react-leaflet/hooks";
 import markerIconPng from "../assets/svg/pin.svg";
 
-import { useContext, useState, useEffect } from "react";
+import { useContext} from "react";
 import LocationContext from "../context/LocationContext";
 
 function Map() {

@@ -57,7 +57,7 @@ function Offers() {
     fetchListings();
   }, []);
 
-  // Pagination / Load More
+  // Pagination / załaduj kolejne
   const onFetchMoreListings = async () => {
     try {
       // Get reference
@@ -97,7 +97,7 @@ function Offers() {
   return (
     <div className="category">
       <header>
-        <p className="pageHeader">Oferty</p>
+        <p className="pageHeader">Przecenione</p>
       </header>
 
       {loading ? (

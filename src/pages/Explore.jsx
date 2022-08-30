@@ -21,7 +21,7 @@ function Explore() {
               alt="rent"
               className="exploreCategoryImg"
             />
-            <p className="exploreCategoryName">Places for rent</p>
+            <p className="exploreCategoryName">Nieruchomości na wynajem</p>
           </Link>
           <Link to="/category/sale">
             <img
@@ -29,10 +29,11 @@ function Explore() {
               alt="sell"
               className="exploreCategoryImg"
             />
-            <p className="exploreCategoryName">Places for sale</p>
+            <p className="exploreCategoryName">Nieruchomości na sprzedaż</p>
           </Link>
         </div>
       </main>
+      <div style={{ minHeight: "2rem" }} />
     </div>
   );
 }

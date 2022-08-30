@@ -41,7 +41,7 @@ function Slider() {
   }
 
   if (listings.length === 0) {
-    return <></>;
+    return <></>; // jak nie ma żadnych listingow wrzuca pusty fragment
   }
 
   return (

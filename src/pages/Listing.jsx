@@ -21,7 +21,7 @@ function Listing() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
-  const { lat, setLat, lng, setLng, setChangeMarker, changeMarker } =
+  const { lat, setLat, lng, setLng, setChangeMarker } =
     useContext(LocationContext);
 
   const navigate = useNavigate(); // nawiguje po podstronach
@@ -44,7 +44,7 @@ function Listing() {
     };
 
     fetchListing();
-  }, [navigate, params.listingId]);
+  }, [navigate, params.listingId, setLat, setLng, setChangeMarker]);
 
   // Wgrywa spiner jak ustawimy setLoading(true)
   if (loading) {

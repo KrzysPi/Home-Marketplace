@@ -21,15 +21,15 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
           <p className="categoryListingName">{listing.name}</p>
 
           <p className="categoryListingPrice">
-            $
             {listing.offer
               ? listing.discountedPrice
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               : listing.regularPrice
                   .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            {listing.type === "rent" && " / miesięcznie"}
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+            zł
+            {listing.type === "rent" && " / m-c"}
           </p>
           <div className="categoryListingInfoDiv">
             <img src={bedIcon} alt="bed" />
