@@ -36,7 +36,7 @@ function OAuth() {
   return (
     <div className="socialLogin">
       <p>
-        {location.pathname === "/sign-up" ? "Zarejstuj się" : "Zaloguj się "}
+        {location.pathname === "/sign-up" ? "Zarejstuj się " : "Zaloguj się "}
         przez
       </p>
       <button className="socialIconDiv" onClick={onGoogleClick}>

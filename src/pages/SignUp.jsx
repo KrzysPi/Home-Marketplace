@@ -60,13 +60,13 @@ function SignUp() {
     <>
       <div className="pageContainer">
         <header>
-          <p className="pageHeader">Welcom Back</p>
+          <p className="pageHeader">Witamy</p>
         </header>
         <form onSubmit={onSubmit}>
           <input
             type="text"
             className="nameInput"
-            placeholder="Name"
+            placeholder="Imie"
             id="name"
             value={name}
             onChange={onChange}
@@ -83,7 +83,7 @@ function SignUp() {
             <input
               type={showPassword ? "text" : "password"}
               className="passwordInput"
-              placeholder="Password"
+              placeholder="Hasło"
               id="password"
               value={password}
               onChange={onChange}
@@ -98,10 +98,10 @@ function SignUp() {
             />
           </div>
           <Link to="/forgot-password" className="forgotPasswordLink">
-            ForgotPassword
+            Przypomnij Hasło
           </Link>
           <div className="signUpBar">
-            <p className="signUpText">Sign Up</p>
+            <p className="signUpText">Zarejstruj się </p>
             <button className="signUpButton">
               <ArrowRightIcon
                 fill="#ffffff"
@@ -113,7 +113,7 @@ function SignUp() {
         </form>
         <OAuth />
         <Link to="/sign-in" className="registerLink">
-          Sign In Instead
+          Zaloguj się
         </Link>
       </div>
     </>

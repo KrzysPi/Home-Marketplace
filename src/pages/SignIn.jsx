@@ -43,7 +43,7 @@ function SignIn() {
     <>
       <div className="pageContainer">
         <header>
-          <p className="pageHeader">Welcom Back</p>
+          <p className="pageHeader">Witamy</p>
         </header>
         <form onSubmit={onSubmit}>
           <input
@@ -58,7 +58,7 @@ function SignIn() {
             <input
               type={showPassword ? "text" : "password"}
               className="passwordInput"
-              placeholder="Password"
+              placeholder="Hasło"
               id="password"
               value={password}
               onChange={onChange}
@@ -73,10 +73,10 @@ function SignIn() {
             />
           </div>
           <Link to="/forgot-password" className="forgotPasswordLink">
-            ForgotPassword
+            Przypomnij Hasło
           </Link>
           <div className="signInBar">
-            <p className="signInText">Sign In</p>
+            <p className="signInText">Zalogój się</p>
             <button className="signInButton">
               <ArrowRightIcon
                 fill="#ffffff"

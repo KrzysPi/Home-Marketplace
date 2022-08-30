@@ -33,7 +33,7 @@ function Explore() {
           </Link>
         </div>
       </main>
-      <div style={{ minHeight: "2rem" }} />
+      <div style={{ minHeight: "6rem" }} />
     </div>
   );
 }
