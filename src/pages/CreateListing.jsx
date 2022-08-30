@@ -98,7 +98,7 @@ function CreateListing() {
       location = !data.data[0] ? undefined : data.data[0]?.label;
       if (location === undefined) {
         setLoading(false);
-        toast.error("Please enter a correct address");
+        toast.error("c");
         return;
       }
     } else {
@@ -108,7 +108,7 @@ function CreateListing() {
 
     console.log(geolocation.lat, geolocation.lng);
 
-    // Store image in firebase
+    // zachowaj zdjęcia w firebase
     const storeImage = async (image) => {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
@@ -139,8 +139,6 @@ function CreateListing() {
             reject(error);
           },
           () => {
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               resolve(downloadURL);
             });
@@ -148,7 +146,6 @@ function CreateListing() {
         );
       });
     };
-    console.log(images);
 
     const imgUrls = await Promise.all(
       [...images].map((image) => storeImage(image))
@@ -164,7 +161,6 @@ function CreateListing() {
       geolocation,
       timestamp: serverTimestamp(),
     };
-    console.log(formDataCopy);
 
     formDataCopy.location = address;
     delete formDataCopy.images;
@@ -173,7 +169,7 @@ function CreateListing() {
 
     const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
-    toast.success("Listing saved");
+    toast.success("Oferta zachowana");
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 

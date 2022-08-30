@@ -16,7 +16,7 @@ import Map from "../components/Map";
 import LocationContext from "../context/LocationContext";
 
 function EditListing() {
-  const [geolocationEnabled, setGeolocationEnabled] = useState(true);
+  const [geolocationEnabled, setGeolocationEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,8 +34,7 @@ function EditListing() {
     latitude: 0,
     longitude: 0,
   });
-  const { lat, setLat, lng, setLng} =
-    useContext(LocationContext);
+  const { lat, setLat, lng, setLng } = useContext(LocationContext);
 
   const {
     type,
@@ -48,7 +47,7 @@ function EditListing() {
     offer,
     regularPrice,
     discountedPrice,
-    images
+    images,
   } = formData;
 
   const auth = getAuth();
@@ -132,7 +131,7 @@ function EditListing() {
       location = !data.data[0] ? undefined : data.data[0]?.label;
       if (location === undefined) {
         setLoading(false);
-        toast.error("Please enter a correct address");
+        toast.error("Podaj poprawny adres");
         return;
       }
     } else {
@@ -171,8 +170,6 @@ function EditListing() {
             reject(error);
           },
           () => {
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               resolve(downloadURL);
             });
@@ -201,11 +198,10 @@ function EditListing() {
     delete formDataCopy.address;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
 
-    // Update listing
     const docRef = doc(db, "listings", params.listingId);
     await updateDoc(docRef, formDataCopy);
     setLoading(false);
-    toast.success("Listing saved");
+    toast.success("Oferta zachowana");
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
