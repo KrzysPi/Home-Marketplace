@@ -16,10 +16,11 @@ import { v4 as uuidv4 } from "uuid";
 import LocationContext from "../context/LocationContext";
 function CreateListing() {
   // eslint-disable-next-line
-  const [geolocationEnabled, setGeolocationEnabled] = useState(true);
+  const [geolocationEnabled, setGeolocationEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   // const { position, setPosition } = useContext(LocationContext);
-  const { lat, setLat, lng, setLng } = useContext(LocationContext);
+  const { lat, setLat, lng, setLng, changeMarker, setChangeMarker } =
+    useContext(LocationContext);
 
   const [formData, setFormData] = useState({
     type: "rent",
@@ -61,6 +62,7 @@ function CreateListing() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setFormData({ ...formData, userRef: user.uid });
+        setChangeMarker(true);
       } else {
         navigate("/sign-in");
       }
@@ -77,13 +79,13 @@ function CreateListing() {
 
     if (discountedPrice >= regularPrice) {
       setLoading(false);
-      toast.error("Discounted price needs to be less than regular price");
+      toast.error("Cena po przecenie musi być niższa od poprzedniej");
       return;
     }
 
     if (images.length > 6) {
       setLoading(false);
-      toast.error("Max 6 images");
+      toast.error("Maksymalnie 6 zdjęć");
       return;
     }
     let geolocation = {};
@@ -95,7 +97,6 @@ function CreateListing() {
 
       const data = await response.json();
 
-      console.log(data);
       geolocation.lat = data.data[0]?.latitude ?? 0;
       geolocation.lng = data.data[0]?.longitude ?? 0;
       location = !data.data[0] ? undefined : data.data[0]?.label;
@@ -105,8 +106,8 @@ function CreateListing() {
         return;
       }
     } else {
-      geolocation.lat = latitude;
-      geolocation.lng = longitude;
+      geolocation.lat = lat;
+      geolocation.lng = lng;
     }
 
     console.log(geolocation.lat, geolocation.lng);
@@ -157,7 +158,7 @@ function CreateListing() {
       [...images].map((image) => storeImage(image))
     ).catch(() => {
       setLoading(false);
-      toast.error("Images not uploaded");
+      toast.error("Nie dodano zdjęć");
       return;
     });
 
@@ -345,11 +346,34 @@ function CreateListing() {
             required
           />
 
+          <label className="formLabel">Geolokacja</label>
+          <div className="formButtons">
+            <button
+              className={geolocationEnabled ? "formButtonActive" : "formButton"}
+              id="geolocationEnabled"
+              type="button"
+              value={true}
+              onClick={() => setGeolocationEnabled(true)}
+            >
+              Automatyczna
+            </button>
+            <button
+              className={
+                !geolocationEnabled ? "formButtonActive" : "formButton"
+              }
+              id="geolocationEnabled"
+              type="button"
+              value={false}
+              onClick={() => setGeolocationEnabled(false)}
+            >
+              Manualna
+            </button>
+          </div>
           {!geolocationEnabled && (
             <>
               <div className="formLatLng flex">
                 <div>
-                  <label className="formLabel">Latitude</label>
+                  <label className="formLabel">szerokość geo.</label>
                   <input
                     className="formInputSmall"
                     type="number"
@@ -360,7 +384,7 @@ function CreateListing() {
                   />
                 </div>
                 <div>
-                  <label className="formLabel">Longitude</label>
+                  <label className="formLabel">DŁugość geo.</label>
                   <input
                     className="formInputSmall"
                     type="number"

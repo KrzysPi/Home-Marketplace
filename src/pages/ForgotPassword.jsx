@@ -16,15 +16,15 @@ function ForgotPassword() {
     try {
       const auth = getAuth();
       await sendPasswordResetEmail(auth, email);
-      toast.success("Email was sent");
+      toast.success("Email został wysłany");
     } catch (error) {
-      toast.error("Could not send reset email");
+      toast.error("Nie mozna wysłać emaila");
     }
   };
   return (
     <div className="pageContainer">
       <header>
-        <p className="pageHeader">Forgot Password</p>
+        <p className="pageHeader">Przypomnij Hasło</p>
       </header>
       <main>
         <form onSubmit={onSubmit}>
@@ -37,11 +37,11 @@ function ForgotPassword() {
             onChange={onChange}
           />
           <Link className="forgotPasswordLink" to="/sign-in">
-            Sign In
+            Zaloguj
           </Link>
 
           <div className="signInBar">
-            <div className="signInText">Send Reset Link</div>
+            <div className="signInText">Wyślij link przypominający</div>
             <button className="signInButton">
               <ArrowRightIcon fill="#ffffff" width="34px" height="34px" />
             </button>

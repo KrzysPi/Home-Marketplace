@@ -50,7 +50,7 @@ function Offers() {
         setListings(listings);
         setLoading(false);
       } catch (error) {
-        toast.error("Could not fetch listings");
+        toast.error("Nie można pobrać ofert");
       }
     };
 
@@ -90,14 +90,14 @@ function Offers() {
       setListings((prevState) => [...prevState, ...listings]);
       setLoading(false);
     } catch (error) {
-      toast.error("Could not fetch listings");
+      toast.error("nie można pobrać ofert");
     }
   };
 
   return (
     <div className="category">
       <header>
-        <p className="pageHeader">Offers</p>
+        <p className="pageHeader">Oferty</p>
       </header>
 
       {loading ? (
@@ -120,12 +120,12 @@ function Offers() {
           <br />
           {lastFetchedListing && (
             <p className="loadMore" onClick={onFetchMoreListings}>
-              Load More
+              Załaduj następne
             </p>
           )}
         </>
       ) : (
-        <p>There are no current offers</p>
+        <p>Nie ma zadnych aktualnych ofert</p>
       )}
     </div>
   );

@@ -181,3 +181,51 @@ return(
 
 <Link> // działa podobnie do useNavigate jednak uzytkownik fizycznie musi klikąć w link, przeniesienie nie dzieje sie automatycznie jek w przypadku useNavigate
 ```
+
+--------------------------------------- dynamiczny Link i useParams
+Jeżeli chcemy przekazywać dane na podstawie adresu URL strony to wykozystujemy useParams bąć useSearchParams
+
+1. Na stronie Listing tworzymy przycisk "kontak" który definiuje adres URL strony
+
+   <Listing.jsx>
+
+```javascript
+
+        <Link
+          to={`/contact/${listing.userRef}?listingName=${listing.name}`}
+          className="primaryButton"
+        >
+```
+
+2. W App musimy dodać go do data flow więc definiujemy rout z dynamicznym linkiem ":" (WAŻNE: userId = listing.userRef, a nie cała reszta adresu)
+
+   <App.js>
+
+```javascript
+<Route path="/contact/:userId" element={<Contact />} />
+```
+
+2. Na docelowej strnie za pomocą useParams możemy zassać userId natomiast za pomocą useSeachParams możemy uzyskać listingName czyli listing.name
+
+<Contact.jsx>
+
+```javascript
+import { useParams, useSearchParams } from "react-router-dom";
+
+const params = useParams(); // {userId:'...'}
+
+const [searchParams, setSearchParams] = useSearchParams();
+searchParams.get("listingName"); // listing.name jako pierotny string, a nie to co w adresie
+```
+
+KONKLUZJE:
+W Route nie musimy podawać całej ścieżki tylko jej podścieżkę a i tak bedzie to działało
+------------------------------------- Swiper ---------------------------
+zewnętrzna biblioteka do slideshow https://swiperjs.com/react
+urzywamy starszej wesji bo z nowszą jest coś nie tak
+
+```
+npm i swiper@6.8.1
+```
+
+------------------------------------- Leaflet -------------------------

@@ -2,18 +2,18 @@ import { Link } from "react-router-dom";
 // import Slider from "../components/Slider";
 import rentCategoryImage from "../assets/jpg/rentCategoryImage.jpg";
 import sellCategoryImage from "../assets/jpg/sellCategoryImage.jpg";
-
+import Slider from "../components/Slider";
 function Explore() {
   return (
     <div className="explore">
       <header>
-        <p className="pageHeader">Explore</p>
+        <p className="pageHeader">Przeglądaj</p>
       </header>
 
       <main>
-        {/* <Slider /> */}
+        <Slider />
 
-        <p className="exploreCategoryHeading">Categories</p>
+        <p className="exploreCategoryHeading">Kategorie</p>
         <div className="exploreCategories">
           <Link to="/category/rent">
             <img

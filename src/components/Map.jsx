@@ -9,26 +9,26 @@ import LocationContext from "../context/LocationContext";
 
 function Map() {
   //   const [position, setPosition] = useState([52.237, 21.017]);
-  const { lat, setLat, lng, setLng } = useContext(LocationContext);
+  const { lat, setLat, lng, setLng, changeMarker } =
+    useContext(LocationContext);
 
   const marker = new Icon({
     iconUrl: markerIconPng,
     iconSize: [40, 40],
     iconAnchor: [20, 40],
   });
+
   function LocationMarker() {
     useMapEvents({
       click: (e) => {
-        setLat(e.latlng.lat);
-        setLng(e.latlng.lng);
+        if (changeMarker) {
+          setLat(e.latlng.lat);
+          setLng(e.latlng.lng);
+        }
       },
     });
 
-    return (
-      <Marker position={[lat, lng]} icon={marker}>
-        <Popup>Your property</Popup>
-      </Marker>
-    );
+    return <Marker position={[lat, lng]} icon={marker}></Marker>;
   }
 
   return (

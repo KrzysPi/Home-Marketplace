@@ -1,8 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getAuth, updateProfile } from "firebase/auth";
 import { db } from "../firebase.config";
-import { updateDoc, doc } from "firebase/firestore";
+import {
+  updateDoc,
+  doc,
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  deleteDoc,
+} from "firebase/firestore";
 import { toast } from "react-toastify";
 
 import ListingItem from "../components/ListingItem";
@@ -12,6 +21,8 @@ import homeIcon from "../assets/svg/homeIcon.svg";
 function Profile() {
   const auth = getAuth();
   const [changeDetails, setChangeDetails] = useState(false); // ustawiam stan jaki bedzie zmieniany przez naciśnięcie przycisku
+  const [loading, setLoading] = useState(true);
+  const [listings, setListings] = useState(null);
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
@@ -19,6 +30,32 @@ function Profile() {
   const { name, email } = formData;
 
   const navigate = useNavigate(); // umożliwia nawigowanie po routach strony
+
+  useEffect(() => {
+    const fetchUserListings = async () => {
+      const listingsRef = collection(db, "listings");
+
+      const q = query(
+        listingsRef,
+        where("userRef", "==", auth.currentUser.uid),
+        orderBy("timestamp", "desc")
+      );
+
+      const querySnap = await getDocs(q);
+
+      const listings = [];
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+      setListings(listings);
+      setLoading(false);
+    };
+
+    fetchUserListings();
+  }, [auth.currentUser.uid]);
 
   const onLogout = () => {
     auth.signOut(); // metoda w firebase
@@ -38,7 +75,7 @@ function Profile() {
         });
       }
     } catch (error) {
-      toast.error("Could not update profile details");
+      toast.error("Nie można zmienić twoich danych");
     }
   };
 
@@ -49,18 +86,32 @@ function Profile() {
     }));
   };
 
+  const onDelete = async (listingId) => {
+    if (window.confirm("Czy na pewno usunąć?")) {
+      await deleteDoc(doc(db, "listings", listingId)); // usuwamy z firebase
+      const updatedListings = listings.filter(
+        // filtrujemy oferty usuwając tylko tą zaznaczoną w UI
+        (listing) => listing.id !== listingId
+      );
+      setListings(updatedListings); // updatujemy UI
+      toast.success("Usunięto z Twoich ofert");
+    }
+  };
+
+  const onEdit = (listingId) => navigate(`/edit-listing/${listingId}`);
+
   return (
     <div className="profile">
       <header className="profileHeader">
-        <p className="pageHeader">My Profile</p>
+        <p className="pageHeader">Twój Profil</p>
         <button type="button" className="logOut" onClick={onLogout}>
-          Logout
+          Wyloguj
         </button>
       </header>
 
       <main>
         <div className="profileDetailsHeader">
-          <p className="profileDetailsText">Personal Details</p>
+          <p className="profileDetailsText">Dane użytkownika</p>
           <p
             className="changePersonalDetails"
             onClick={() => {
@@ -68,7 +119,7 @@ function Profile() {
               setChangeDetails((prevState) => !prevState);
             }}
           >
-            {changeDetails ? "done" : "change"}
+            {changeDetails ? "zapisz" : "zmień"}
           </p>
         </div>
         <div className="profileCard">
@@ -94,9 +145,25 @@ function Profile() {
         {/* Twozymy link do publikacji ogłoszenia */}
         <Link to="/create-listing" className="createListing">
           <img src={homeIcon} alt="home" />
-          <p>Sell or rent your home</p>
+          <p>Sprzedaj lub wynajmij nieruchomość</p>
           <img src={arrowRight} alt="arrow right" />
         </Link>
+        {!loading && listings?.length > 0 && (
+          <>
+            <p className="listingText">Twoje Oferty</p>
+            <ul className="listingsList">
+              {listings.map((listing) => (
+                <ListingItem
+                  key={listing.id}
+                  listing={listing.data}
+                  id={listing.id}
+                  onDelete={() => onDelete(listing.id)}
+                  onEdit={() => onEdit(listing.id)}
+                />
+              ))}
+            </ul>
+          </>
+        )}
       </main>
     </div>
   );

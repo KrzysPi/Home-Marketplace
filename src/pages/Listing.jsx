@@ -1,39 +1,45 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Link,
   useNavigate,
   useParams,
 } from "react-router-dom"; /*useParams do zassania  z url danych dotyczących kategorii i ID*/
+
+import Map from "../components/Map";
+import LocationContext from "../context/LocationContext";
 // import { Helmet } from "react-helmet";
-// import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-// import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-// import { Swiper, SwiperSlide } from "swiper/react";
-// import "swiper/swiper-bundle.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
 import { getDoc, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase.config";
 import Spinner from "../components/Spinner";
 import shareIcon from "../assets/svg/shareIcon.svg";
-// SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 function Listing() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  const { lat, setLat, lng, setLng, setChangeMarker, changeMarker } =
+    useContext(LocationContext);
 
   const navigate = useNavigate(); // nawiguje po podstronach
-  const params = useParams(); // pobiera parametry
-  const auth = getAuth(); // autentyfikacja
-
+  const params = useParams(); // pobiera parametry z adresu strony
+  const auth = getAuth(); // autentyfikacja z firebase
+  //   console.log(params); // {categoryName: "sale"/"rent", ListingId:....}
   useEffect(() => {
     const fetchListing = async () => {
-      const docRef = doc(db, "listings", params.listingId);
+      // zaciagamy z zewnątrz
+      const docRef = doc(db, "listings", params.listingId); // doc(baza danych, jej kolekcja, klucz ) to funkcja firebase definująca co chemy z bazy danych
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        console.log(docSnap.data());
         setListing(docSnap.data());
         setLoading(false);
+        setLat(docSnap.data().geolocation.lat);
+        setLng(docSnap.data().geolocation.lng);
+        setChangeMarker(false);
       }
     };
 
@@ -47,7 +53,25 @@ function Listing() {
 
   return (
     <main>
-      {/* SLIDER */}
+      <Swiper
+        slidesPerView={1}
+        pagination={{
+          clickable: true,
+        }}
+      >
+        {listing.imgUrls.map((_, index) => (
+          <SwiperSlide key={index}>
+            <div
+              style={{
+                background: `url(${listing.imgUrls[index]}) center no-repeat`,
+                backgroundSize: "cover",
+                minHeight: "20rem",
+              }}
+              className="swiperSlideDiv"
+            ></div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
       <div
         className="shareIconDiv"
         onClick={() => {
@@ -64,10 +88,7 @@ function Listing() {
 
       <div className="listingDetails">
         <div className="listingName">
-          <p>
-            {" "}
-            {listing.name} {""}
-          </p>
+          <p> {listing.name}</p>
           <p id="price">
             {listing.offer
               ? listing.discountedPrice
@@ -95,7 +116,7 @@ function Listing() {
         <ul className="listingDetailsList">
           <li>
             {listing.bedrooms > 1
-              ? `${listing.bedrooms} sypialni`
+              ? `${listing.bedrooms} sypialnie`
               : "1 sypialnia"}
           </li>
           <li>
@@ -109,25 +130,9 @@ function Listing() {
 
         <p className="listingLocationTitle">Lokalizacja</p>
 
-        <div className="leafletContainer">
-          {/* <MapContainer
-            style={{ height: "100%", width: "100%" }}
-            center={[listing.geolocation.lat, listing.geolocation.lng]}
-            zoom={13}
-            scrollWheelZoom={false}
-          >
-            <TileLayer
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
-            />
+        <Map lat={lat} lng={lng} />
 
-            <Marker
-              position={[listing.geolocation.lat, listing.geolocation.lng]}
-            >
-              <Popup>{listing.location}</Popup>
-            </Marker>
-          </MapContainer> */}
-        </div>
+        {/* <div className="leafletContainer"></div> */}
 
         {auth.currentUser?.uid !== listing.userRef && (
           <Link

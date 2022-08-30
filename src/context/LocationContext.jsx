@@ -6,6 +6,7 @@ export const LocationProvider = ({ children }) => {
   //   const [position, setPosition] = useState([52.237, 21.017]);
   const [lat, setLat] = useState(52.237);
   const [lng, setLng] = useState(21.017);
+  const [changeMarker, setChangeMarker] = useState(true);
 
   return (
     <LocationContext.Provider
@@ -14,6 +15,8 @@ export const LocationProvider = ({ children }) => {
         setLat,
         lng,
         setLng,
+        changeMarker,
+        setChangeMarker,
       }}
     >
       {children}

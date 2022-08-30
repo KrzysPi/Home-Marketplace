@@ -17,6 +17,7 @@ import ListingItem from "../components/ListingItem";
 function Category() {
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(null);
+  const [lastFetchedListing, setLastFetchedListing] = useState(null);
 
   const params = useParams();
 
@@ -31,11 +32,15 @@ function Category() {
           listingcRef,
           where("type", "==", params.categoryName),
           orderBy("timestamp", "desc"),
-          limit(10)
+          limit(10) // tyle załaduje na początku
         );
 
         //Execute query
         const querySnap = await getDocs(q);
+
+        const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+        setLastFetchedListing(lastVisible);
+
         const listings = [];
         querySnap.forEach((doc) => {
           listings.push({
@@ -46,19 +51,56 @@ function Category() {
         setListings(listings);
         setLoading(false);
       } catch (error) {
-        toast.error("Could not fetch listings");
+        toast.error("Nie można pobrać ofert");
       }
     };
     fetchListings();
-  }, []);
+  }, [params.categoryName]);
+
+  // Pagination / załaduj kolejne
+  const onFetchMoreListings = async () => {
+    try {
+      // Get reference
+      const listingsRef = collection(db, "listings");
+
+      // Create a query
+      const q = query(
+        listingsRef,
+        where("type", "==", params.categoryName),
+        orderBy("timestamp", "desc"),
+        startAfter(lastFetchedListing),
+        limit(10) // ilość kolejnych odert do ładowania
+      );
+
+      // Execute query
+      const querySnap = await getDocs(q);
+
+      const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+      setLastFetchedListing(lastVisible);
+
+      const listings = [];
+
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+
+      setListings((prevState) => [...prevState, ...listings]);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Nie można pobrać ofert");
+    }
+  };
 
   return (
     <div className="category">
       <header>
         <p className="pageHeader">
           {params.categoryName === "rent"
-            ? "Places for rent"
-            : "Places for sale"}
+            ? "Lokalen na wynajem"
+            : "Lokale na sprzedaż"}
         </p>
       </header>
 
@@ -78,16 +120,16 @@ function Category() {
             </ul>
           </main>
 
-          {/* <br />
+          <br />
           <br />
           {lastFetchedListing && (
             <p className="loadMore" onClick={onFetchMoreListings}>
-              Load More
-            </p> */}
-          {/* )} */}
+              Załaduj kolejne
+            </p>
+          )}
         </>
       ) : (
-        <p>No listings for {params.categoryName}</p>
+        <p>Brak oferty dla {params.categoryName}</p>
       )}
     </div>
   );
